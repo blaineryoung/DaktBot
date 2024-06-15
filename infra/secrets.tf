@@ -46,3 +46,10 @@ resource "azurerm_key_vault_secret" "cosmosdb_connection_string" {
   value        = azurerm_cosmosdb_account.primary_storage.primary_sql_connection_string
   key_vault_id = azurerm_key_vault.app_secrets.id
 }
+
+resource "azurerm_key_vault_secret" "app_insights_key" {
+  name         = "AppInsights--LoggingKey"
+  value        = azurerm_application_insights.service_monitoring_app_insights.instrumentation_key
+  key_vault_id = azurerm_key_vault.app_secrets.id
+}
+

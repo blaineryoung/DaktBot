@@ -9,9 +9,21 @@ variable "resource_group_postfix" {
     description = "The shared postfix applied to all created resource groups"
 }
 
+locals {
+  resource_group_name = "${var.resource_group_prefix}_${var.resource_group_postfix}"
+}
+
 variable "resource_group_location" {
     type = string
-    default = "westus3"
+    default = "eastus2"
+}
+
+variable "ARM_SUBSCRIPTION_ID" {
+    type = string
+}
+
+variable "ARM_TENANT_ID" {
+    type = string
 }
 
 
