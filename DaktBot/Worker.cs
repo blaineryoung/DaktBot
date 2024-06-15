@@ -1,4 +1,4 @@
-namespace DaktBot
+namespace Daktbot.Runner
 {
     public class Worker : BackgroundService
     {
