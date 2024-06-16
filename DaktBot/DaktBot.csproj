@@ -22,4 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Daktbot.Discord.Core\Daktbot.Discord.Core.csproj" />
+  </ItemGroup>
 </Project>

@@ -41,6 +41,12 @@ resource "azurerm_key_vault_secret" "discord_token" {
   key_vault_id = azurerm_key_vault.app_secrets.id
 }
 
+resource "azurerm_key_vault_secret" "discord_dev_token" {
+  name         = "Discord--DevToken"
+  value        = "Insert token here"
+  key_vault_id = azurerm_key_vault.app_secrets.id
+}
+
 resource "azurerm_key_vault_secret" "cosmosdb_connection_string" {
   name         = "CosmosDb--ConnectionString"
   value        = azurerm_cosmosdb_account.primary_storage.primary_sql_connection_string

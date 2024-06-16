@@ -14,10 +14,9 @@ namespace Daktbot.Runner
 
             });
 
-            IConfigurationRoot? config = null;
             host.ConfigureAppConfiguration((context, c) =>
             {
-                config = c.Build();
+                var config = c.Build();
                 c.AddAzureKeyVault(
                     new Uri($"https://{config["KeyVaultName"]}.vault.azure.net/"),
                     new DefaultAzureCredential());
@@ -26,8 +25,10 @@ namespace Daktbot.Runner
 
             host.ConfigureLogging((context, c) =>
             {
-                c.AddApplicationInsights(config["AppInsights:LoggingKey"]);
+                c.AddApplicationInsights(context.Configuration["AppInsights:LoggingKey"]);
             });
+
+            ServiceBuilder.BuildServices(host);
 
             host.Build().Run();
         }
