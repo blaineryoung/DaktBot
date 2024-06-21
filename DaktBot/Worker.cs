@@ -5,11 +5,11 @@ namespace Daktbot.Runner
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IDiscordClient discordClient;
+        private readonly IDiscordBotClient discordClient;
 
         public Worker(
             ILogger<Worker> logger,
-            IDiscordClient discordClient)
+            IDiscordBotClient discordClient)
         {
             _logger = logger;
             this.discordClient = discordClient;
@@ -20,6 +20,8 @@ namespace Daktbot.Runner
             _logger.LogInformation("Connecting to discord");
 
             await discordClient.Start();
+
+
 
             while (!stoppingToken.IsCancellationRequested)
             {

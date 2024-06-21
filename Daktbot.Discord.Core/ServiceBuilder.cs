@@ -1,4 +1,5 @@
 ﻿using Daktbot.Discord.Core.Client;
+using Daktbot.Discord.Core.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,7 +14,13 @@ namespace Daktbot.Discord.Core
     {
         public static void AddDiscordServices(this IServiceCollection services)
         {
-            services.AddSingleton<IDiscordClient, DiscordClient>();
+            services.AddSingleton<IDiscordBotClient, DiscordBotClient>();
+
+            IEnumerable<Type> commands = BotUtilities.GetSubclasses(typeof(AbstractDiscordCommand));
+            foreach (Type type in commands)
+            {
+                services.AddSingleton(type);
+            }
         }
 
         public static void BindDiscordConfig(this IServiceCollection services, IConfiguration config)
