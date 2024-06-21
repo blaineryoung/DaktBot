@@ -5,6 +5,13 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaktBot", "DaktBot\DaktBot.csproj", "{6541F4A2-BFB4-4F45-BB83-D04C8BBFEB18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daktbot.Discord.Core", "Daktbot.Discord.Core\Daktbot.Discord.Core.csproj", "{8518A036-8FBF-4232-9843-BEF83C7D584D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E3F1A12-6665-445F-B6DF-A40138BB275A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +22,10 @@ Global
 		{6541F4A2-BFB4-4F45-BB83-D04C8BBFEB18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6541F4A2-BFB4-4F45-BB83-D04C8BBFEB18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6541F4A2-BFB4-4F45-BB83-D04C8BBFEB18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8518A036-8FBF-4232-9843-BEF83C7D584D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8518A036-8FBF-4232-9843-BEF83C7D584D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8518A036-8FBF-4232-9843-BEF83C7D584D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8518A036-8FBF-4232-9843-BEF83C7D584D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
