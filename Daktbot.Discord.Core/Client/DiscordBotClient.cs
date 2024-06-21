@@ -46,9 +46,9 @@ namespace Daktbot.Discord.Core.Client
                 this.client = client;
             }
 
-            await Task.Delay(1000);
-            await this.RegisterCommands();
+            client.Connected += RegisterCommands;
         }
+
 
         public async Task RegisterCommands()
         {
