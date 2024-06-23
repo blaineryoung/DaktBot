@@ -36,6 +36,11 @@ namespace Daktbot.Common.Utilities
             "(UTC+11:00) Solomon Is., New Caledonia",
         };
 
+        /// <summary>
+        /// Get a shortened list of time zones that will probably work for Fated Circle.  Discord only allows a max of 25 items,
+        /// so exclude places we're unlikely to raid from.  Yes, I can see us raiding from Pyongyang some day.
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<TimeZoneInfo> GetCuratedTimeZones()
         {
             return TimeZoneInfo.GetSystemTimeZones().Where(x => validTimeZones.Contains(x.DisplayName)).ToArray();

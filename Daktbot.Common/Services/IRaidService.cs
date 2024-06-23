@@ -10,10 +10,16 @@ namespace Daktbot.Common.Services
 {
     public interface IRaidService
     {
-        Task<Result<ChannelRaid, RequestError>> GetRaidForChannel(uint channelId, string raidId);
+        Task<Result<ChannelRaid, RequestError>> GetRaidForChannel(ulong channelId, string raidId);
 
-        Task<Result<PaginatedResult<ChannelRaid>, RequestError>> GetRaidsForChannel(uint channelId);
+        Task<Result<PaginatedResult<ChannelRaid>, RequestError>> GetRaidsForChannel(ulong channelId);
 
         Task<Result<ChannelRaid, RequestError>> UpsertRaid(ChannelRaid raid);
+
+        Task<Result<string,  RequestError>> GetRaidTimesString(ChannelRaid raid, IReadOnlyDictionary<TimeZoneInfo, string> playerMappings);
+
+        Task<Result<TimeSpan, RequestError>> GetTimeToNextRaid(ChannelRaid raid);
+
+        Task<Result<string, RequestError>> PrintTimeToNextRaid(IEnumerable<ChannelRaid> raids);
     }
 }

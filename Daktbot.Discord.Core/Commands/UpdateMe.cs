@@ -29,7 +29,7 @@ namespace Daktbot.Discord.Core.Commands
 
         public UpdateMe(
             IPersonService personService,
-            ILogger<TestCommand> logger)
+            ILogger<UpdateMe> logger)
         {
             this.timeZones = TimeZoneUtilities.GetCuratedTimeZones().ToArray();
             this.personService = personService;
@@ -61,11 +61,11 @@ namespace Daktbot.Discord.Core.Commands
                 m => { returnedPerson = m; return true; },
                 failed => { Logger.LogRequestError(failed, "Could not update information for {userid}", command.User.Id); return false; }))
             {
-                await command.RespondAsync($"Hello, {command.User.GlobalName}.  We couldn't update your information for reason.  Please bug Dakt");
+                await command.RespondAsync($"Hello, {command.User.GlobalName}.  We couldn't update your information for reason.  Please bug Dakt", ephemeral: true);
             }
             else
             {
-                await command.RespondAsync($"Hello, {command.User.GlobalName}.  You picked timezone {timeZones[timezoneSelection.Value].DisplayName}");
+                await command.RespondAsync($"Hello, {command.User.GlobalName}.  You picked timezone {timeZones[timezoneSelection.Value].DisplayName}", ephemeral: true);
             }
         }
 

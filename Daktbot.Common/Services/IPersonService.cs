@@ -13,7 +13,7 @@ namespace Daktbot.Common.Services
         Task<Result<ChannelPerson, RequestError>> GetPersonForChannel(ulong channelId, ulong userId);
 
         Task<Result<PaginatedResult<ChannelPerson>, RequestError>> GetPersonsForChannel(ulong channelId);
-
+        Task<Result<IReadOnlyDictionary<TimeZoneInfo, string>, RequestError>> GetPlayerTimezoneMappings(string channelIdString);
         Task<Result<ChannelPerson, RequestError>> UpsertPerson(ChannelPerson person);
     }
 }
