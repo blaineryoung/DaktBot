@@ -13,5 +13,7 @@ namespace Daktbot.Common.Services
         Task<Result<ChannelPerson, RequestError>> GetPersonForChannel(uint channelId, uint userId);
 
         Task<Result<PaginatedResult<ChannelPerson>, RequestError>> GetPersonsForChannel(uint channelId);
+
+        Task<Result<ChannelPerson, RequestError>> UpsertPerson(ChannelPerson person);
     }
 }

@@ -38,17 +38,15 @@ namespace Daktbot.Discord.Core.Client
             using (logger.BeginScope("Starting discord client"))
             {
                 DiscordSocketClient client = new DiscordSocketClient();
+                client.Connected += RegisterCommands;
                 client.Log += Log;
 
                 await client.LoginAsync(TokenType.Bot, discordOptions.GetToken());
                 await client.StartAsync();
 
                 this.client = client;
-            }
-
-            client.Connected += RegisterCommands;
+            }          
         }
-
 
         public async Task RegisterCommands()
         {

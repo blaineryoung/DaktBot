@@ -32,5 +32,10 @@ namespace Daktbot.Common.Services
         {
             return await personStore.GetAll(channelId.ToString(), null);
         }
+
+        public async Task<Result<ChannelPerson, RequestError>> UpsertPerson(ChannelPerson person)
+        {
+            return await personStore.Upsert(person, person.ChannelId);
+        }
     }
 }
