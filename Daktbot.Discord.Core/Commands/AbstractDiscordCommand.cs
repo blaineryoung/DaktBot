@@ -52,7 +52,14 @@ namespace Daktbot.Discord.Core.Commands
         {
             using (Logger.BeginScope("Executing command {command}", Name))
             {
-                await HandleCommand(command);
+                try
+                {
+                    await HandleCommand(command);
+                }
+                catch (Exception e) 
+                {
+                    Logger.LogError(e, "Failed responding to message");
+                }
             }
         }
     }
