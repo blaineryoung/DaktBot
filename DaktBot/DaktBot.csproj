@@ -28,6 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Daktbot.Common\Daktbot.Common.csproj" />
     <ProjectReference Include="..\Daktbot.Discord.Core\Daktbot.Discord.Core.csproj" />
+    <ProjectReference Include="..\Daktbot.Storage\Daktbot.Storage.csproj" />
   </ItemGroup>
 </Project>
