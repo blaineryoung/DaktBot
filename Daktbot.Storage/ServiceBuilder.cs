@@ -17,6 +17,7 @@ namespace Daktbot.Storage
                 failed => throw new Exception(failed.ErrorMessage));
 
             services.AddSingleton<IPersonStore, PersonStore>();
+            services.AddSingleton<IRaidStore, RaidStore>();
         }
     }
 }

@@ -23,12 +23,12 @@ namespace Daktbot.Common.Services
             this.logger = logger;
         }
 
-        public async Task<Result<ChannelPerson, RequestError>> GetPersonForChannel(uint channelId, uint userId)
+        public async Task<Result<ChannelPerson, RequestError>> GetPersonForChannel(ulong channelId, ulong userId)
         {
             return await personStore.Get(userId.ToString(), channelId.ToString());
         }
 
-        public async Task<Result<PaginatedResult<ChannelPerson>, RequestError>> GetPersonsForChannel(uint channelId)
+        public async Task<Result<PaginatedResult<ChannelPerson>, RequestError>> GetPersonsForChannel(ulong channelId)
         {
             return await personStore.GetAll(channelId.ToString(), null);
         }

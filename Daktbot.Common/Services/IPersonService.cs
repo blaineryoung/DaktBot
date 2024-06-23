@@ -10,9 +10,9 @@ namespace Daktbot.Common.Services
 {
     public interface IPersonService
     {
-        Task<Result<ChannelPerson, RequestError>> GetPersonForChannel(uint channelId, uint userId);
+        Task<Result<ChannelPerson, RequestError>> GetPersonForChannel(ulong channelId, ulong userId);
 
-        Task<Result<PaginatedResult<ChannelPerson>, RequestError>> GetPersonsForChannel(uint channelId);
+        Task<Result<PaginatedResult<ChannelPerson>, RequestError>> GetPersonsForChannel(ulong channelId);
 
         Task<Result<ChannelPerson, RequestError>> UpsertPerson(ChannelPerson person);
     }

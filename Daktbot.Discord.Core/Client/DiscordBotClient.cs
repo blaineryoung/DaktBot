@@ -73,7 +73,10 @@ namespace Daktbot.Discord.Core.Client
                             logger.LogInformation("Command {command} already exists, skipping", command.Name);
                         }
 
-                        Commands.Add(command.Name, command);
+                        if (!Commands.ContainsKey(command.Name))
+                        {
+                            Commands.Add(command.Name, command);
+                        }
                     }
                 }
             }

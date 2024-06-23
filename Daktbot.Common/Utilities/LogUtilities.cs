@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Daktbot.Discord.Core
+namespace Daktbot.Common.Utilities
 {
     public static class LogUtilities
     {

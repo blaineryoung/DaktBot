@@ -13,6 +13,7 @@ namespace Daktbot.Common
         public static void AddCommonServices(this IServiceCollection services)
         {
             services.AddSingleton<IPersonService, PersonService>();
+            services.AddSingleton<IRaidService, RaidService>();
         }
 
     }
