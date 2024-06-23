@@ -2,6 +2,7 @@
 using Daktbot.Common.Results;
 using Daktbot.Common.Services;
 using Daktbot.Common.Utilities;
+using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using System;
@@ -86,9 +87,12 @@ namespace Daktbot.Discord.Core.Commands
             {
                 await command.RespondAsync($"Failed... could not determine next raid");
                 return;
-            }       
+            }
 
-            await command.RespondAsync(raidTimes.ToString());
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.Description = raidTimes.ToString();
+
+            await command.RespondAsync(embed: eb.Build());
         }
     }
 }

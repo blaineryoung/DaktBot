@@ -35,7 +35,7 @@ namespace Daktbot.Discord.Core.Commands
         public AddRaid(
             IRaidService raidService,
             IPersonService personService,
-            ILogger<TestCommand> logger)
+            ILogger<AddRaid> logger)
         {
             this.raidService = raidService;
             this.personService = personService;

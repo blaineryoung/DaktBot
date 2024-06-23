@@ -92,11 +92,11 @@ namespace Daktbot.Common.Utilities
                 DateTime local = TimeZoneInfo.ConvertTime(sourceTime, sourceTimeZone, displayer.Key);
                 if (local.DayOfWeek == sourceTime.DayOfWeek)
                 {
-                    sb.AppendLine($"> **{displayer.Value}** - {local.ToShortTimeString()}");
+                    sb.AppendLine($"**{displayer.Value}** - {local.ToShortTimeString()}");
                 }
                 else
                 {
-                    sb.AppendLine($"> **{displayer.Value}** - {local.ToShortTimeString()} ({local.DayOfWeek})");
+                    sb.AppendLine($"**{displayer.Value}** - {local.ToShortTimeString()} ({local.DayOfWeek})");
                 }
             }
 
