@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -152,6 +153,11 @@ namespace Daktbot.Common.Services
         public async Task<Result<ChannelRaid, RequestError>> UpsertRaid(ChannelRaid raid)
         {
             return await raidStore.Upsert(raid, raid.ChannelId);
+        }
+
+        public async Task<Result<HttpStatusCode, RequestError>> DeleteRaid(ulong channelId, string raidId)
+        {
+            return await raidStore.Delete(raidId, channelId.ToString());
         }
     }
 }

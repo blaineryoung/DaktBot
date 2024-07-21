@@ -3,6 +3,7 @@ using Daktbot.Common.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,5 +22,7 @@ namespace Daktbot.Common.Services
         Task<Result<TimeSpan, RequestError>> GetTimeToNextRaid(ChannelRaid raid);
 
         Task<Result<string, RequestError>> PrintTimeToNextRaid(IEnumerable<ChannelRaid> raids);
+
+        Task<Result<HttpStatusCode, RequestError>> DeleteRaid(ulong channelId, string raidId);
     }
 }

@@ -2,7 +2,9 @@
 using Daktbot.Common.Results;
 using Daktbot.Common.Services;
 using Daktbot.Common.Utilities;
+using Daktbot.Discord.Core.Client;
 using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using System;
@@ -38,6 +40,16 @@ namespace Daktbot.Discord.Core.Commands
         {
             StringBuilder raidTimes = new StringBuilder();
 
+            bool? verbose = null;
+            if (null != command.Data.Options && command.Data.Options.Count > 0)
+            { 
+                verbose = command.Data.Options.FirstOrDefault().Value as bool?;
+            }
+            if (verbose == null)
+            {
+                verbose = false;
+            }
+
             if (command.ChannelId == null) 
             {
                 Logger.LogWarning("Got a command with no guild id");
@@ -67,7 +79,14 @@ namespace Daktbot.Discord.Core.Commands
 
             foreach (ChannelRaid raid in raids)
             {
-                raidTimes.AppendLine($"{raid.Day}");
+                if (verbose == false)
+                {
+                    raidTimes.AppendLine($"{raid.Day}");
+                }
+                else
+                {
+                    raidTimes.AppendLine($"{raid.Day} ({raid.Id})");
+                }
 
                 Result<string, RequestError> getRaidTimesString = await raidService.GetRaidTimesString(raid, playerMappings);
                 if (false == getRaidTimesString.Match<bool>(
@@ -93,6 +112,30 @@ namespace Daktbot.Discord.Core.Commands
             eb.Description = raidTimes.ToString();
 
             await command.RespondAsync(embed: eb.Build());
+        }
+
+        internal override async Task Register(IDiscordBotClient client, SocketGuild guild)
+        {
+            using (Logger.BeginScope("Registering command {command}", Name))
+            {
+                SlashCommandBuilder command = new SlashCommandBuilder();
+                command.WithName(Name.ToLower());
+                command.WithDescription(Description);
+
+                SlashCommandOptionBuilder options = new SlashCommandOptionBuilder();
+                options = options.WithName("verbose").WithDescription("Display raid Ids").WithRequired(false).WithType(ApplicationCommandOptionType.Boolean);
+                command.AddOption(options);
+
+                try
+                {
+                    await guild.CreateApplicationCommandAsync(command.Build());
+                    //await client.Client.CreateGlobalApplicationCommandAsync(command.Build());
+                }
+                catch (ApplicationCommandException e)
+                {
+                    Logger.LogError(e, "Could not register command {command}", Name);
+                }
+            }
         }
     }
 }
