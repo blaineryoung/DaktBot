@@ -89,27 +89,9 @@ namespace Daktbot.Common.Services
                 }
             }
 
-            String timeTillRaid = String.Empty;
-
             if (nextRaid < TimeSpan.MaxValue)
             {
-                if (0 != nextRaid.Days)
-                {
-                    timeTillRaid = $"{nextRaid.Days} days, {nextRaid.Hours} hours, {nextRaid.Minutes} minutes";
-                }
-                else if (0 != nextRaid.Hours)
-                {
-                    timeTillRaid = $"{nextRaid.Hours} hours, {nextRaid.Minutes} minutes";
-                }
-                else if (0 != nextRaid.Minutes)
-                {
-                    timeTillRaid = $"{nextRaid.Minutes} minutes";
-                }
-                else
-                {
-                    timeTillRaid = "NOW!";
-                }
-                return timeTillRaid;
+                return TimeUtilities.PrettyPrintTimeSpan(nextRaid);
             }
             else
             {

@@ -102,5 +102,28 @@ namespace Daktbot.Common.Utilities
 
             return sb;
         }
+
+        public static String PrettyPrintTimeSpan(TimeSpan span) 
+        {
+            String timeTillRaid = String.Empty;
+
+            if (0 != span.Days)
+            {
+                timeTillRaid = $"{span.Days} days, {span.Hours} hours, {span.Minutes} minutes";
+            }
+            else if (0 != span.Hours)
+            {
+                timeTillRaid = $"{span.Hours} hours, {span.Minutes} minutes";
+            }
+            else if (0 != span.Minutes)
+            {
+                timeTillRaid = $"{span.Minutes} minutes";
+            }
+            else
+            {
+                timeTillRaid = "NOW!";
+            }
+            return timeTillRaid;
+        }
     }
 }

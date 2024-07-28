@@ -1,5 +1,6 @@
 ﻿using Daktbot.Discord.Core.Client;
 using Daktbot.Discord.Core.Commands;
+using Daktbot.Discord.Core.Spotlets;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -21,6 +22,8 @@ namespace Daktbot.Discord.Core
             {
                 services.AddSingleton(type);
             }
+
+            services.AddSingleton<IPostRaidPoll, PostRaidPoll>();
         }
 
         public static void BindDiscordConfig(this IServiceCollection services, IConfiguration config)
