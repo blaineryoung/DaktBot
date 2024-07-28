@@ -46,13 +46,14 @@ namespace Daktbot.Discord.Core.Commands
             using (Logger.BeginScope("Handling post raid command for user {user}", command.User.GlobalName))
             {
                 ulong channelId = command.Channel.Id;
-                string? raidId =  command.Data.Options.FirstOrDefault(x => string.Equals(RaidIdOption, x.Name)).Value as string;
-
-                if (string.IsNullOrWhiteSpace(raidId))
+                string? raidId = null;
+                if (command.Data.Options != null)
                 {
-                    Logger.LogError("Delete raid - user {user} gave a bad raid id", command.User.GlobalName);
-                    await command.RespondAsync("We couldn't delete the raid.  Please bug Dakt");
-                    return;
+                    SocketSlashCommandDataOption? opt = command.Data.Options.FirstOrDefault(x => string.Equals(RaidIdOption, x.Name));
+                    if (opt != null)
+                    {
+                        raidId = opt.Value as string;
+                    }
                 }
 
                 DateTime? raidTime = null;
@@ -78,7 +79,7 @@ namespace Daktbot.Discord.Core.Commands
                 command.WithDescription(Description);
 
                 SlashCommandOptionBuilder raidIdOption = new SlashCommandOptionBuilder();
-                raidIdOption = raidIdOption.WithName("raidid").WithDescription("Id of the raid to post a poll for").WithRequired(true).WithType(ApplicationCommandOptionType.String);
+                raidIdOption = raidIdOption.WithName("raidid").WithDescription("Id of the raid to post a poll for").WithRequired(false).WithType(ApplicationCommandOptionType.String);
 
                 command.AddOption(raidIdOption);
 

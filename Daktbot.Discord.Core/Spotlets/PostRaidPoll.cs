@@ -33,7 +33,7 @@ namespace Daktbot.Discord.Core.Spotlets
             this.logger = logger;
         }
 
-        public async Task<Result<DateTime, RequestError>> PostPoll(ulong channelId, string raidId)
+        public async Task<Result<DateTime, RequestError>> PostPoll(ulong channelId, string? raidId = null)
         {
             ITextChannel channel = await botClient.Client.GetChannelAsync(channelId) as ITextChannel;
             if (channel == null) 
@@ -42,26 +42,49 @@ namespace Daktbot.Discord.Core.Spotlets
                 return new RequestError($"Could not find channel {channelId}", HttpStatusCode.NotFound);
             }
 
-            ChannelRaid? raid = null;
-            Result<ChannelRaid, RequestError> getRaidResult = await raidService.GetRaidForChannel(channelId, raidId);
-            if (false == getRaidResult.Match<bool>(
-                r => { raid = r; return true; },
-                error => logger.LogRequestError(error, "Could not get raid {raidId} for channel {channel}", raidId, channelId)))
+            
+            IEnumerable<ChannelRaid> raids = null;
+            Result<PaginatedResult<ChannelRaid>, RequestError> getRaidsResult = await raidService.GetRaidsForChannel(channelId);
+            if (false == getRaidsResult.Match<bool>(
+                r => { raids = r.Value; return true; },
+                error => logger.LogRequestError(error, "Could not get raids for channel {channel}", channelId)))
             {
-                return getRaidResult.CastError<DateTime>();
+                return getRaidsResult.CastError<DateTime>();
             }
 
-            TimeSpan? timeToNextRaid = null;
-            Result<TimeSpan, RequestError> getTimeResult = await raidService.GetTimeToNextRaid(raid);
-            if (false == getTimeResult.Match<bool>(
-                t => { timeToNextRaid = t; return true; },
-                error => logger.LogRequestError(error, "Could not get time to next faid for raid {raidId} for channel {channel}", raidId, channelId)))
+            TimeSpan? timeToNextRaid = TimeSpan.MaxValue;
+            ChannelRaid? raid = raids.FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(raidId))
             {
-                return getRaidResult.CastError<DateTime>();
+                foreach (ChannelRaid cr in raids)
+                {
+                    Result<TimeSpan, RequestError> getTimeResult = await raidService.GetTimeToNextRaid(cr);
+                    if (false == getTimeResult.Match<bool>(
+                        t => { if (timeToNextRaid > t) { timeToNextRaid = t; raid = cr; }; return true; },
+                        error => logger.LogRequestError(error, "Could not get time to next faid for raid {raidId} for channel {channel}", raidId, channelId)))
+                    {
+                        return getTimeResult.CastError<DateTime>();
+                    }
+                }
+            }
+            else
+            {
+                raid = raids.Where(x => String.Equals(x.Id, raidId)).FirstOrDefault();
+                if (raid != null)
+                {
+                    Result<TimeSpan, RequestError> getTimeResult = await raidService.GetTimeToNextRaid(raid);
+                    if (false == getTimeResult.Match<bool>(
+                        t => { timeToNextRaid = t; return true; },
+                        error => logger.LogRequestError(error, "Could not get time to next faid for raid {raidId} for channel {channel}", raidId, channelId)))
+                    {
+                        return getTimeResult.CastError<DateTime>();
+                    }
+                }
             }
 
             DateTime raidTime = DateTime.UtcNow.Add(timeToNextRaid.Value);
-            string message = $"Are you going?";
+            string message = $"Next raid is in {TimeUtilities.PrettyPrintTimeSpan(timeToNextRaid.Value)}, are you going?";
 
             PollMediaProperties[] answers = {
                 new PollMediaProperties { Text = "Yes"},

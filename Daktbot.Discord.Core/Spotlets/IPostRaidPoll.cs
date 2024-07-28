@@ -10,6 +10,6 @@ namespace Daktbot.Discord.Core.Spotlets
 {
     public interface IPostRaidPoll
     {
-        Task<Result<DateTime, RequestError>> PostPoll(ulong channelId, string raidId);
+        Task<Result<DateTime, RequestError>> PostPoll(ulong channelId, string? raidId = null);
     }
 }
