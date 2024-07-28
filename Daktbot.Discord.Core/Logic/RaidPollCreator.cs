@@ -15,41 +15,33 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Daktbot.Discord.Core.Spotlets
+namespace Daktbot.Discord.Core.Logic
 {
-    public class PostRaidPoll : IPostRaidPoll
+    public class RaidPollCreator : IRaidPollCreator
     {
         private readonly IRaidService raidService;
         private readonly IDiscordBotClient botClient;
-        private readonly ILogger<PostRaidPoll> logger;
+        private readonly ILogger<RaidPollCreator> logger;
 
-        public PostRaidPoll(
+        public RaidPollCreator(
             IRaidService raidService,
             IDiscordBotClient botClient,
-            ILogger<PostRaidPoll> logger) 
+            ILogger<RaidPollCreator> logger) 
         {
             this.raidService = raidService;
             this.botClient = botClient;
             this.logger = logger;
         }
 
-        public async Task<Result<DateTime, RequestError>> PostPoll(ulong channelId, string? raidId = null)
+        public async Task<Result<PollProperties, RequestError>> GetPoll(ulong channelId, string? raidId = null)
         {
-            ITextChannel channel = await botClient.Client.GetChannelAsync(channelId) as ITextChannel;
-            if (channel == null) 
-            {
-                logger.LogWarning("Could not find channel {channelid}", channelId);
-                return new RequestError($"Could not find channel {channelId}", HttpStatusCode.NotFound);
-            }
-
-            
             IEnumerable<ChannelRaid> raids = null;
             Result<PaginatedResult<ChannelRaid>, RequestError> getRaidsResult = await raidService.GetRaidsForChannel(channelId);
             if (false == getRaidsResult.Match<bool>(
                 r => { raids = r.Value; return true; },
                 error => logger.LogRequestError(error, "Could not get raids for channel {channel}", channelId)))
             {
-                return getRaidsResult.CastError<DateTime>();
+                return getRaidsResult.CastError<PollProperties>();
             }
 
             TimeSpan? timeToNextRaid = TimeSpan.MaxValue;
@@ -64,7 +56,7 @@ namespace Daktbot.Discord.Core.Spotlets
                         t => { if (timeToNextRaid > t) { timeToNextRaid = t; raid = cr; }; return true; },
                         error => logger.LogRequestError(error, "Could not get time to next faid for raid {raidId} for channel {channel}", raidId, channelId)))
                     {
-                        return getTimeResult.CastError<DateTime>();
+                        return getTimeResult.CastError<PollProperties>();
                     }
                 }
             }
@@ -78,7 +70,7 @@ namespace Daktbot.Discord.Core.Spotlets
                         t => { timeToNextRaid = t; return true; },
                         error => logger.LogRequestError(error, "Could not get time to next faid for raid {raidId} for channel {channel}", raidId, channelId)))
                     {
-                        return getTimeResult.CastError<DateTime>();
+                        return getTimeResult.CastError<PollProperties>();
                     }
                 }
             }
@@ -104,10 +96,31 @@ namespace Daktbot.Discord.Core.Spotlets
                 LayoutType = PollLayout.Default
             };
 
+            return poll;
+        }
+
+        public async Task<Result<HttpStatusCode, RequestError>> PostPoll(ulong channelId, string? raidId = null)
+        {
+            ITextChannel channel = await botClient.Client.GetChannelAsync(channelId) as ITextChannel;
+            if (channel == null) 
+            {
+                logger.LogWarning("Could not find channel {channelid}", channelId);
+                return new RequestError($"Could not find channel {channelId}", HttpStatusCode.NotFound);
+            }
+
+            Result<PollProperties, RequestError> getPollResult = await GetPoll(channelId, raidId);
+            PollProperties? poll = null;
+            if (false == getPollResult.Match<bool>(
+                p => { poll = p; return true; },
+                error => logger.LogRequestError(error, "Could not get time to next faid for raid {raidId} for channel {channel}", raidId, channelId)))
+            {
+                return getPollResult.CastError<HttpStatusCode>();
+            }
+
             // Send the poll to the text channel
             await channel.SendMessageAsync(poll: poll);
 
-            return raidTime;
+            return HttpStatusCode.OK;
         }
     }
 }

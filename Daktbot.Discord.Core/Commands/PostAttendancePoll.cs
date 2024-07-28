@@ -16,14 +16,14 @@ using Daktbot.Common.Entities;
 using Daktbot.Common.Utilities;
 using Microsoft.Extensions.Options;
 using System.Net;
-using Daktbot.Discord.Core.Spotlets;
+using Daktbot.Discord.Core.Logic;
 
 namespace Daktbot.Discord.Core.Commands
 {
     internal class PostAttendancePoll : AbstractDiscordCommand
     {
         private readonly IPersonService personService;
-        private readonly IPostRaidPoll poller;
+        private readonly IRaidPollCreator poller;
 
         internal override ILogger Logger { get; }
 
@@ -34,7 +34,7 @@ namespace Daktbot.Discord.Core.Commands
         internal override string Description => "Posts a poll asking who will attend the specified raid.";
 
         public PostAttendancePoll(
-            IPostRaidPoll poller,
+            IRaidPollCreator poller,
             ILogger<PostAttendancePoll> logger)
         {
             this.poller = poller;
@@ -56,17 +56,17 @@ namespace Daktbot.Discord.Core.Commands
                     }
                 }
 
-                DateTime? raidTime = null;
-                Result<DateTime, RequestError> postPollResult = await poller.PostPoll(channelId, raidId);
-                if (false == postPollResult.Match(
-                    t => { raidTime = t; return true; },
+                PollProperties? raidPoll = null;
+                Result<PollProperties, RequestError> getPollResult = await poller.GetPoll(channelId, raidId);
+                if (false == getPollResult.Match(
+                    p => { raidPoll = p; return true; },
                     error => Logger.LogRequestError(error, "Could not post poll for raid")))
                 {
                     await command.RespondAsync("We couldn't post a poll for the raid, bug Dakt");
                     return;
                 }
 
-                await command.RespondAsync($"The next raid is in <t:{Convert.ToInt32(raidTime.Value.Subtract(DateTime.UnixEpoch).TotalSeconds)}:R>");
+                await command.RespondAsync(poll: raidPoll);
             }
         }
 
